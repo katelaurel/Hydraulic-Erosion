@@ -1,14 +1,3 @@
-# Hydraulic-Erosion
-Simulating erosion to try make procedural terrains look a little more natural.
-See my video on this project here: https://www.youtube.com/watch?v=eaXk97ujbPQ
+# Hydraulic-Erosion ... with plants
 
-To run this project you'll need to open it in the Unity game engine: https://unity3d.com/
-
-Before:
-![Before](https://i.imgur.com/c8BvDOj.jpg)
-After 70k iterations of erosion:
-![After](https://i.imgur.com/4p5Rmk4.png)
-
-Resources:
-https://www.firespark.de/resources/downloads/implementation%20of%20a%20methode%20for%20hydraulic%20erosion.pdf
-http://ranmantaru.com/blog/2011/10/08/water-erosion-on-heightmap-terrain/
+experimenting with simulating realistic plant communities in changing terrain.
