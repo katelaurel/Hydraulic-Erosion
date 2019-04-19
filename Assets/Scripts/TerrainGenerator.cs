@@ -31,6 +31,7 @@ public class TerrainGenerator : MonoBehaviour {
 
     // Internal
     float[] map;
+    float[] originalMap;
     Mesh mesh;
     int mapSizeWithBorder;
 
@@ -39,8 +40,22 @@ public class TerrainGenerator : MonoBehaviour {
 
     public void GenerateHeightMap () {
         mapSizeWithBorder = mapSize + erosionBrushRadius * 2;
+        originalMap = new float[mapSizeWithBorder * mapSizeWithBorder];
         map = FindObjectOfType<HeightMapGenerator> ().GenerateHeightMap (mapSizeWithBorder);
+        map.CopyTo(originalMap, 0);
+        Debug.Log(originalMap[10].ToString());
+    //    DebugBSArray(originalMap);
     }
+
+    void DebugBSArray(float[] incomingarray)
+    {
+        foreach (float item in incomingarray)
+        {
+            Debug.Log(item.ToString());
+        }
+    }
+
+
 
     public void Erode () {
         int numThreads = numErosionIterations / 1024;
@@ -115,6 +130,14 @@ public class TerrainGenerator : MonoBehaviour {
         randomIndexBuffer.Release ();
         brushIndexBuffer.Release ();
         brushWeightBuffer.Release ();
+
+        // Establish soil amounts
+        float[] soilAmounts = new float[mapSizeWithBorder * mapSizeWithBorder];
+        for (int i = 0; i < mapSizeWithBorder * mapSizeWithBorder; i++)  {
+            soilAmounts[i] = Mathf.Max(0, map[i] - originalMap[i]);
+        }
+
+
     }
 
     public void ContructMesh () {
