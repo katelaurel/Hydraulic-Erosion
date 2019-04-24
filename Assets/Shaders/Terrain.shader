@@ -31,7 +31,7 @@
             float grassBlendHeight = _GrassSlopeThreshold * (1-_GrassBlendAmount);
             float grassWeight = 1-saturate((slope-grassBlendHeight)/(_GrassSlopeThreshold-grassBlendHeight));
 			float f = tex2D(_MainTex, IN.uv_MainTex).a; // + (_GrassColour * grassWeight + _RockColour * (1-grassWeight)) ;
-			o.Albedo = f;
+			o.Albedo = 8*f;
 		}
         ENDCG
     }

@@ -138,17 +138,17 @@ public class TerrainGenerator : MonoBehaviour {
 
         soilAmounts = new float[mapSizeWithBorder * mapSizeWithBorder];
         for (int i = 0; i < mapSizeWithBorder * mapSizeWithBorder; i++)  {
-            soilAmounts[i] = Scale(Mathf.Max(0, map[i] - originalMap[i]), 0, 1, );
+            soilAmounts[i] = Mathf.Max(0, map[i] - originalMap[i]);
         }
 
-        var min = soilAmounts.Min();
-        var max = soilAmounts.Max();
-        for (int i = 0; i < mapSizeWithBorder * mapSizeWithBorder; i++)
-        {
-            soilAmounts[i] = Scale(soilAmounts[i], 0, 1, min, max);
-        }
+        //var min = soilAmounts.Min();
+        //var max = soilAmounts.Max();
+        //for (int i = 0; i < mapSizeWithBorder * mapSizeWithBorder; i++)
+        //{
+        //    soilAmounts[i] = Scale(soilAmounts[i], 0, 1, min, max);
+        //}
 
-        soilAmounts.CopyTo(map, 0);
+        //soilAmounts.CopyTo(map, 0);
 
         Color[] colors = new Color[mapSizeWithBorder * mapSizeWithBorder];
         for (int i = 0; i < mapSizeWithBorder * mapSizeWithBorder; i++)
@@ -157,11 +157,11 @@ public class TerrainGenerator : MonoBehaviour {
         }
 
         Texture2D texture = new Texture2D(mapSizeWithBorder, mapSizeWithBorder, TextureFormat.RGBA32, false);
-        var byteArray = new byte[soilAmounts.Length * 4];
-        System.Buffer.BlockCopy(soilAmounts, 0, byteArray, 0, byteArray.Length);
+        //var byteArray = new byte[soilAmounts.Length * 4];
+        //System.Buffer.BlockCopy(soilAmounts, 0, byteArray, 0, byteArray.Length);
 
-        texture.LoadRawTextureData(byteArray);
-        //texture.SetPixels(colors);
+        //texture.LoadRawTextureData(byteArray);
+        texture.SetPixels(colors);
         texture.Apply();
 
         string meshHolderName = "Mesh Holder";
