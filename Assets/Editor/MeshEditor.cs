@@ -23,7 +23,7 @@ public class MeshEditor : Editor {
             var sw = new System.Diagnostics.Stopwatch ();
 
             sw.Start();
-            terrainGenerator.GenerateHeightMap();
+            // terrainGenerator.GenerateHeightMap();
             int heightMapTimer = (int)sw.ElapsedMilliseconds;
             sw.Reset();
 

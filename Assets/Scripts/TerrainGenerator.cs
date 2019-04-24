@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class TerrainGenerator : MonoBehaviour {
@@ -32,6 +33,8 @@ public class TerrainGenerator : MonoBehaviour {
     // Internal
     float[] map;
     float[] originalMap;
+    float[] soilAmounts;
+
     Mesh mesh;
     int mapSizeWithBorder;
 
@@ -43,7 +46,7 @@ public class TerrainGenerator : MonoBehaviour {
         originalMap = new float[mapSizeWithBorder * mapSizeWithBorder];
         map = FindObjectOfType<HeightMapGenerator> ().GenerateHeightMap (mapSizeWithBorder);
         map.CopyTo(originalMap, 0);
-        Debug.Log(originalMap[10].ToString());
+    //    Debug.Log(originalMap[10].ToString());
     //    DebugBSArray(originalMap);
     }
 
@@ -132,17 +135,59 @@ public class TerrainGenerator : MonoBehaviour {
         brushWeightBuffer.Release ();
 
         // Establish soil amounts
-        float[] soilAmounts = new float[mapSizeWithBorder * mapSizeWithBorder];
+
+        soilAmounts = new float[mapSizeWithBorder * mapSizeWithBorder];
         for (int i = 0; i < mapSizeWithBorder * mapSizeWithBorder; i++)  {
-            soilAmounts[i] = Mathf.Max(0, map[i] - originalMap[i]);
+            soilAmounts[i] = Scale(Mathf.Max(0, map[i] - originalMap[i]), 0, 1, );
         }
 
+        var min = soilAmounts.Min();
+        var max = soilAmounts.Max();
+        for (int i = 0; i < mapSizeWithBorder * mapSizeWithBorder; i++)
+        {
+            soilAmounts[i] = Scale(soilAmounts[i], 0, 1, min, max);
+        }
 
+        soilAmounts.CopyTo(map, 0);
+
+        Color[] colors = new Color[mapSizeWithBorder * mapSizeWithBorder];
+        for (int i = 0; i < mapSizeWithBorder * mapSizeWithBorder; i++)
+        {
+            colors[i] = new Color(0, 0, 0, soilAmounts[i]);
+        }
+
+        Texture2D texture = new Texture2D(mapSizeWithBorder, mapSizeWithBorder, TextureFormat.RGBA32, false);
+        var byteArray = new byte[soilAmounts.Length * 4];
+        System.Buffer.BlockCopy(soilAmounts, 0, byteArray, 0, byteArray.Length);
+
+        texture.LoadRawTextureData(byteArray);
+        //texture.SetPixels(colors);
+        texture.Apply();
+
+        string meshHolderName = "Mesh Holder";
+        Transform meshHolder = transform.Find(meshHolderName);
+        meshHolder.GetComponent<MeshRenderer>().sharedMaterial.mainTexture = texture;
+
+        //AssignMeshComponents();
+        //meshFilter.sharedMesh = mesh;
+        //meshRenderer.sharedMaterial = material;
+        //material.SetFloat("_MaxHeight", elevationScale);
+
+        //Texture2D texture = Resources.Load("ram") as Texture2D;
+        //string meshHolderName = "Mesh Holder";
+        //Transform meshHolder = transform.Find(meshHolderName);
+        //meshHolder.GetComponent<MeshRenderer>().sharedMaterial.mainTexture = texture;
+    }
+
+    private float Scale(float value, float min, float max, float minScale, float maxScale)
+    {
+        return minScale + (float)(value - min) / (max - min) * (maxScale - minScale);
     }
 
     public void ContructMesh () {
         Vector3[] verts = new Vector3[mapSize * mapSize];
         int[] triangles = new int[(mapSize - 1) * (mapSize - 1) * 6];
+        Vector2[] uvs = new Vector2[verts.Length];
         int t = 0;
 
         for (int i = 0; i < mapSize * mapSize; i++) {
@@ -157,6 +202,7 @@ public class TerrainGenerator : MonoBehaviour {
             float normalizedHeight = map[borderedMapIndex];
             pos += Vector3.up * normalizedHeight * elevationScale;
             verts[meshMapIndex] = pos;
+            uvs[i] = percent;
 
             // Construct triangles
             if (x != mapSize - 1 && y != mapSize - 1) {
@@ -169,6 +215,7 @@ public class TerrainGenerator : MonoBehaviour {
                 triangles[t + 3] = meshMapIndex + mapSize + 1;
                 triangles[t + 4] = meshMapIndex + 1;
                 triangles[t + 5] = meshMapIndex;
+
                 t += 6;
             }
         }
@@ -181,12 +228,12 @@ public class TerrainGenerator : MonoBehaviour {
         mesh.indexFormat = UnityEngine.Rendering.IndexFormat.UInt32;
         mesh.vertices = verts;
         mesh.triangles = triangles;
+        mesh.uv = uvs;
         mesh.RecalculateNormals ();
 
         AssignMeshComponents ();
         meshFilter.sharedMesh = mesh;
         meshRenderer.sharedMaterial = material;
-
         material.SetFloat ("_MaxHeight", elevationScale);
     }
 

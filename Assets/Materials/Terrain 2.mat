@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Terrain 2
-  m_Shader: {fileID: 4800000, guid: bfd71f9c93ee4428999dab466b14d8f6, type: 3}
+  m_Shader: {fileID: 4800000, guid: 4a9af91d5e55d4ac482fec1726fb7ff3, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -21,6 +21,10 @@ Material:
     m_TexEnvs:
     - _BumpMap:
         m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Detail:
+        m_Texture: {fileID: 10309, guid: 0000000000000000f000000000000000, type: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DetailAlbedoMap:
@@ -40,8 +44,8 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
+        m_Texture: {fileID: 10309, guid: 0000000000000000f000000000000000, type: 0}
+        m_Scale: {x: 1, y: 2}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
         m_Texture: {fileID: 0}
@@ -71,11 +75,11 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0
     - _GlossyReflections: 1
-    - _GrassBlendAmount: 1
+    - _GrassBlendAmount: 0.557
     - _GrassFlatnessThreshold: 0.1
     - _GrassHeightFadePower: 2.37
     - _GrassMaxHeight: 0.75
-    - _GrassSlopeThreshold: 0.32
+    - _GrassSlopeThreshold: 0.206
     - _MaxHeight: 10
     - _Metallic: 0
     - _Mode: 0
